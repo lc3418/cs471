@@ -87,17 +87,94 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # print "Start:", problem.getStartState()
+    # print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    # print "Start's successors:", problem.getSuccessors(problem.getStartState())
+
+    forward_stack = util.Stack()
+    '''Elements are stored as ((state_to_expand), [actions_list]).'''
+    forward_stack.push((problem.getStartState(), []))
+    visited_nodes = []
+    # visited_nodes.append(problem.getStartState())
+
+    while forward_stack.isEmpty() == 0:
+        current_position, actions = forward_stack.pop()     
+        if problem.isGoalState(current_position):
+            # actions.append(next_action)
+            break
+        else:
+            if current_position not in visited_nodes:
+                visited_nodes.append(current_position)
+                next = problem.getSuccessors(current_position)
+                for i in next:
+                    next_position, next_action, next_cost = i
+                    # print next_action, next_position
+                    # actions.append(next_action)
+                    forward_stack.push((next_position, actions+[next_action]))
+    return actions
+
+    # ac = ['South'];
+    # print forward_stack.pop()
+    # print visited_nodes
+    # print problem.getSuccessors(problem.getStartState())
+    # print problem.getCostOfActions(ac)
+    # util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    '''Use a queue instead of a stack'''
+    forward_stack = util.Queue()
+    forward_stack.push((problem.getStartState(), [])) 
+    visited_nodes = []
+    # visited_nodes.append(problem.getStartState())
+
+    while forward_stack.isEmpty() == 0:
+        current_position, actions = forward_stack.pop()   
+        if problem.isGoalState(current_position):
+            # actions.append(next_action)
+            break
+        else:
+            if current_position not in visited_nodes:
+                visited_nodes.append(current_position)
+                next = problem.getSuccessors(current_position)
+                for i in next:
+                    next_position, next_action, next_cost = i
+                    # print next_action, next_position
+                    # actions.append(next_action)
+                    forward_stack.push((next_position, actions+[next_action]))
+    return actions
+
+    # util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    '''Use a priority queue instead of a queue'''
+    forward_stack = util.PriorityQueue()
+    '''A sum of total cost should also be stored now and used as the priority, a low cost solution should be considered first'''
+    forward_stack.push((problem.getStartState(), [], 0), 0) 
+    visited_nodes = []
+    # visited_nodes.append(problem.getStartState())
+
+    while forward_stack.isEmpty() == 0:
+        current_position, actions, cost = forward_stack.pop()   
+        if problem.isGoalState(current_position):
+            # actions.append(next_action)
+            break
+        else:
+            if current_position not in visited_nodes:
+                visited_nodes.append(current_position)
+                next = problem.getSuccessors(current_position)
+                for i in next:
+                    next_position, next_action, next_cost = i
+                    # print next_action, next_position
+                    # actions.append(next_action)
+                    forward_stack.push((next_position, actions+[next_action], cost+next_cost), cost+next_cost)
+    return actions
+    # util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -109,7 +186,31 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    '''Use a priority queue instead of a queue'''
+    forward_stack = util.PriorityQueue()
+    '''A sum of total cost should also be stored now and used as the priority, a low cost solution should be considered first'''
+    forward_stack.push((problem.getStartState(), [], 0), 0) 
+    visited_nodes = []
+    # visited_nodes.append(problem.getStartState())
+
+    while forward_stack.isEmpty() == 0:
+        current_position, actions, cost = forward_stack.pop()   
+        if problem.isGoalState(current_position):
+            # actions.append(next_action)
+            break
+        else:
+            if current_position not in visited_nodes:
+                visited_nodes.append(current_position)
+                next = problem.getSuccessors(current_position)
+                for i in next:
+                    next_position, next_action, next_cost = i
+                    # print next_action, next_position
+                    # actions.append(next_action)
+                    '''When pushing next state, add the heuristic value to the priority value'''
+                    forward_stack.push((next_position, actions+[next_action], cost+next_cost), cost+next_cost+heuristic(next_position, problem))
+    return actions
+    # util.raiseNotDefined()
 
 
 # Abbreviations
